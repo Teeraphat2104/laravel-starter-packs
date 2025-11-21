@@ -1,5 +1,5 @@
 <section class="mb-4">
-    <div class="card shadow-sm rounded-4 border-0">
+    <div class="card profile-section-card shadow-sm rounded-4 border-0">
         <div class="card-body p-4">
 
             {{-- Header --}}
@@ -16,7 +16,7 @@
                 <div class="mb-3">
                     <label for="update_password_current_password" class="form-label">รหัสผ่านปัจจุบัน</label>
                     <input type="password" id="update_password_current_password" name="current_password"
-                           class="form-control" autocomplete="current-password">
+                        class="form-control" autocomplete="current-password">
                     @error('current_password')
                         <div class="text-danger small mt-1">{{ $message }}</div>
                     @enderror
@@ -24,8 +24,8 @@
 
                 <div class="mb-3">
                     <label for="update_password_password" class="form-label">รหัสผ่านใหม่</label>
-                    <input type="password" id="update_password_password" name="password"
-                           class="form-control" autocomplete="new-password">
+                    <input type="password" id="update_password_password" name="password" class="form-control"
+                        autocomplete="new-password">
                     @error('password')
                         <div class="text-danger small mt-1">{{ $message }}</div>
                     @enderror
@@ -34,13 +34,13 @@
                 <div class="mb-3">
                     <label for="update_password_password_confirmation" class="form-label">ยืนยันรหัสผ่านใหม่</label>
                     <input type="password" id="update_password_password_confirmation" name="password_confirmation"
-                           class="form-control" autocomplete="new-password">
+                        class="form-control" autocomplete="new-password">
                     @error('password_confirmation')
                         <div class="text-danger small mt-1">{{ $message }}</div>
                     @enderror
                 </div>
 
-                <div class="d-flex align-items-center gap-3 mt-3">
+                <div class="d-flex align-items-center gap-3 mt-3 justify-content-end">
                     <button type="submit" class="btn btn-primary">บันทึก</button>
 
                     @if (session('status') === 'password-updated')

@@ -11,6 +11,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Bai+Jamjuree:wght@300;400;500;600&display=swap"
         rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
 
     <style>
         * {
@@ -92,7 +93,7 @@
             box-shadow: 0 1px 8px rgba(0, 0, 0, 0.05);
         }
     </style>
-
+    @yield('styles')
     @stack('styles')
 </head>
 
@@ -169,3 +170,4 @@
 </body>
 
 </html>
+
