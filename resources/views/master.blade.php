@@ -12,6 +12,7 @@
         rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" integrity="sha512-nKUxD..." crossorigin="anonymous">
 
     <style>
         * {
@@ -98,59 +99,7 @@
 </head>
 
 <body>
-    <nav class="navbar navbar-expand-lg navbar-light">
-        <div class="container">
-            <a class="navbar-brand" href="{{ route('dashboard') }}">
-                Daily Journal
-            </a>
-
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNav">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-
-            <div class="collapse navbar-collapse" id="mainNav">
-                <ul class="navbar-nav me-auto">
-                    @auth
-                        <li class="nav-item">
-                            <a class="nav-link {{ request()->routeIs('dashboard') ? 'active' : '' }}"
-                                href="{{ route('dashboard') }}">Home</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link {{ request()->routeIs('daily-entries.*') ? 'active' : '' }}"
-                                href="{{ route('daily-entries.calendar') }}">บันทึกประจำวัน</a>
-                        </li>
-                    @endauth
-                </ul>
-
-                <ul class="navbar-nav ms-auto">
-                    @auth
-                        <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown">
-                                {{ Auth::user()->name }}
-                            </a>
-                            <ul class="dropdown-menu dropdown-menu-end">
-                                <li>
-                                    <a class="dropdown-item" href="{{ route('profile.edit') }}">โปรไฟล์</a>
-                                </li>
-                                <li>
-                                    <hr class="dropdown-divider">
-                                </li>
-                                <li>
-                                    <form action="{{ route('logout') }}" method="POST">
-                                        @csrf
-                                        <button class="dropdown-item" type="submit">ออกจากระบบ</button>
-                                    </form>
-                                </li>
-                            </ul>
-                        </li>
-                    @else
-                        <li class="nav-item"><a class="nav-link" href="{{ route('login') }}">เข้าสู่ระบบ</a></li>
-                        <li class="nav-item"><a class="nav-link" href="{{ route('register') }}">สมัครสมาชิก</a></li>
-                    @endauth
-                </ul>
-            </div>
-        </div>
-    </nav>
+    @include('layouts.navbar')
 
     <main class="py-4">
         <div class="container">
@@ -166,6 +115,7 @@
     </main>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    @yield('scripts')
     @stack('scripts')
 </body>
 
