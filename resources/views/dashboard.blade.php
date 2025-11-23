@@ -224,7 +224,7 @@
                                             <span
                                                 class="fw-semibold text-dark">{{ $entry->entry_date->locale('th')->translatedFormat('d M Y') }}</span>
                                             <span
-                                                class="badge bg-label-{{ $config['color'] }} rounded-pill">{{ $entry->mood }}
+                                                class="bg-label-{{ $config['color'] }} rounded-pill">{{ $entry->mood }}
                                                 {{ $config['emoji'] }}</span>
                                         </div>
                                         <p class="text-muted small mb-0 text-truncate" style="max-width: 300px;">
@@ -236,7 +236,6 @@
                         @endif
                     </div>
                 </div>
-
             </div>
 
             <!-- Right Column -->

@@ -6,6 +6,9 @@ use App\Models\DailyEntry;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\EntryCreated;
+use App\Mail\EntryUpdated;
 use Illuminate\View\View;
 use Illuminate\Http\RedirectResponse;
 
@@ -18,20 +21,20 @@ class DailyEntryController extends Controller
     {
         $year = $request->get('year', now()->year);
         $month = $request->get('month', now()->month);
-        
+
         $startDate = now()->setDate($year, $month, 1)->startOfMonth();
         $endDate = $startDate->copy()->endOfMonth();
-        
+
         $entries = DailyEntry::where('user_id', Auth::id())
             ->whereBetween('entry_date', [$startDate, $endDate])
             ->get()
             ->keyBy(function ($entry) {
                 return $entry->entry_date->format('Y-m-d');
             });
-        
+
         $firstDayOfWeek = $startDate->dayOfWeek;
         $daysInMonth = $startDate->daysInMonth;
-        
+
         return view('daily-entries.calendar', compact('year', 'month', 'entries', 'startDate', 'firstDayOfWeek', 'daysInMonth'));
     }
 
@@ -43,12 +46,12 @@ class DailyEntryController extends Controller
         $weekStart = $request->get('week', now()->startOfWeek()->format('Y-m-d'));
         $startDate = Carbon::parse($weekStart)->startOfWeek();
         $endDate = $startDate->copy()->endOfWeek();
-        
+
         $entries = DailyEntry::where('user_id', Auth::id())
             ->whereBetween('entry_date', [$startDate, $endDate])
             ->orderBy('entry_date')
             ->get();
-        
+
         return view('daily-entries.weekly-summary', compact('entries', 'startDate', 'endDate'));
     }
 
@@ -59,19 +62,19 @@ class DailyEntryController extends Controller
     {
         $year = $request->get('year', now()->year);
         $month = $request->get('month', now()->month);
-        
+
         $startDate = now()->setDate($year, $month, 1)->startOfMonth();
         $endDate = $startDate->copy()->endOfMonth();
-        
+
         $entries = DailyEntry::where('user_id', Auth::id())
             ->whereBetween('entry_date', [$startDate, $endDate])
             ->orderBy('entry_date')
             ->get();
-        
+
         $moodStats = $entries->groupBy('mood')->map->count();
         $totalDays = $entries->count();
         $daysInMonth = $startDate->daysInMonth;
-        
+
         return view('daily-entries.monthly-summary', compact('entries', 'startDate', 'endDate', 'moodStats', 'totalDays', 'daysInMonth', 'year', 'month'));
     }
 
@@ -84,7 +87,7 @@ class DailyEntryController extends Controller
         $entry = DailyEntry::where('user_id', Auth::id())
             ->where('entry_date', $date)
             ->first();
-        
+
         return view('daily-entries.create', compact('date', 'entry'));
     }
 
@@ -110,6 +113,12 @@ class DailyEntryController extends Controller
             $validated
         );
 
+        $entry = DailyEntry::where('user_id', Auth::id())
+            ->where('entry_date', $validated['entry_date'])
+            ->first();
+
+        Mail::to($entry->user->email)->send(new EntryCreated($entry));
+
         return redirect()->route('daily-entries.calendar')
             ->with('200', 'บันทึกประจำวันสำเร็จแล้ว');
     }
@@ -120,7 +129,7 @@ class DailyEntryController extends Controller
     public function edit(string $id): View
     {
         $entry = DailyEntry::where('user_id', Auth::id())->findOrFail($id);
-        
+
         return view('daily-entries.edit', compact('entry'));
     }
 
@@ -138,6 +147,8 @@ class DailyEntryController extends Controller
         ]);
 
         $entry->update($validated);
+
+        Mail::to($entry->user->email)->send(new EntryUpdated($entry));
 
         return redirect()->route('daily-entries.calendar')
             ->with('200', 'อัปเดตบันทึกประจำวันสำเร็จแล้ว');
